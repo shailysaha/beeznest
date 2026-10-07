@@ -1,16 +1,73 @@
 @import "tailwindcss";
 
-:root {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+/* =========================================
+   BEEZNEST DESIGN TOKENS
+   Tailwind CSS v4
+========================================= */
 
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+
+  /* Brand colors */
+  --color-brand-50: #f0faf3;
+  --color-brand-100: #dcf3e3;
+  --color-brand-200: #bde8cb;
+  --color-brand-300: #94d8ab;
+  --color-brand-400: #6bc48c;
+  --color-brand-700: #2f855a;
+  --color-brand-900: #14532d;
+
+  /* Shadows */
+  --shadow-soft: 0 10px 30px rgba(20, 83, 45, 0.08);
+  --shadow-lift: 0 20px 50px rgba(20, 83, 45, 0.14);
+  --shadow-glow: 0 0 60px rgba(148, 216, 171, 0.55);
+
+  /* Animations */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-drift: drift 14s ease-in-out infinite;
+  --animate-shine: shine 2.5s ease-in-out infinite;
+}
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(20px, -14px); }
+}
+
+@keyframes shine {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   GLOBAL BASE STYLES
+========================================= */
+
+:root {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #14532d;
   background: #ffffff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
@@ -22,19 +79,429 @@ body {
   margin: 0;
   min-width: 320px;
   background: #ffffff;
+  color: #475569;
+  overflow-x: hidden;
 }
 
-button,
-input,
-select {
+#root {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+button, input, textarea, select {
   font: inherit;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button {
   cursor: pointer;
+  touch-action: manipulation;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+  touch-action: manipulation;
+}
+
+img, svg, video {
+  max-width: 100%;
+  display: block;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  overflow-wrap: break-word;
+}
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
 ::selection {
-  background: #bde8cb;
+  background: rgba(34, 197, 94, 0.18);
   color: #14532d;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(107, 196, 140, 0.55);
+  outline-offset: 3px;
+}
+
+/* =========================================
+   BEEZNEST COMPONENT UTILITIES (Phase 6A)
+========================================= */
+
+@layer components {
+  .bn-container {
+    width: min(1200px, calc(100% - 40px));
+    margin-inline: auto;
+  }
+
+  .bn-section {
+    padding: 96px 0;
+  }
+
+  .bn-section-soft {
+    background: #f0faf3;
+  }
+
+  .bn-section-green {
+    background: #dcf3e3;
+  }
+
+  .bn-section-dark {
+    background: #14532d;
+    color: white;
+  }
+
+  /* Glass */
+  .bn-glass {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* Cards */
+  .bn-card {
+    border-radius: 20px;
+    background: #ffffff;
+    border: 1px solid #dcf3e3;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .bn-card-hover {
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  }
+
+  .bn-card-hover:hover {
+    transform: translateY(-6px);
+    border-color: #94d8ab;
+    box-shadow: var(--shadow-lift);
+  }
+
+  /* Gradient text */
+  .bn-gradient-text {
+    background: linear-gradient(90deg, #2f855a, #6bc48c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Primary button */
+  .bn-gradient-button {
+    position: relative;
+    overflow: hidden;
+    color: #ffffff;
+    background: linear-gradient(135deg, #94d8ab, #2f855a);
+    box-shadow: 0 10px 30px rgba(20, 83, 45, 0.16);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+
+  .bn-gradient-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(20, 83, 45, 0.2);
+  }
+
+  /* Secondary button */
+  .bn-outline-button {
+    background: #ffffff;
+    color: #14532d;
+    border: 1px solid #94d8ab;
+    transition: transform 200ms ease, background 200ms ease, box-shadow 200ms ease;
+  }
+
+  .bn-outline-button:hover {
+    transform: translateY(-3px);
+    background: #f0faf3;
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* Eyebrow */
+  .bn-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #2f855a;
+    font-size: 12px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .bn-eyebrow-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #6bc48c;
+    box-shadow: 0 0 0 5px rgba(107, 196, 140, 0.15);
+  }
+}
+
+/* =========================================
+   HERO MESH
+========================================= */
+
+.bn-mesh {
+  background:
+    radial-gradient(60% 50% at 80% 20%, rgba(189, 232, 203, 0.65) 0%, transparent 70%),
+    radial-gradient(40% 40% at 10% 80%, rgba(220, 243, 227, 0.8) 0%, transparent 70%),
+    #ffffff;
+}
+
+/* =========================================
+   HONEYCOMB
+========================================= */
+
+.bn-honeycomb {
+  background-image:
+    linear-gradient(30deg, rgba(47, 133, 90, 0.05) 12%, transparent 12.5%, transparent 87%, rgba(47, 133, 90, 0.05) 87.5%, rgba(47, 133, 90, 0.05)),
+    linear-gradient(150deg, rgba(47, 133, 90, 0.05) 12%, transparent 12.5%, transparent 87%, rgba(47, 133, 90, 0.05) 87.5%, rgba(47, 133, 90, 0.05));
+  background-size: 36px 62px;
+  background-position: 0 0, 0 0;
+}
+
+/* =========================================
+   TRUST STRIP MARQUEE
+========================================= */
+
+@keyframes bn-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.bn-marquee {
+  animation: bn-marquee 18s linear infinite;
+}
+
+.bn-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+  color: rgb(100 116 139);
+  transition: color 200ms ease, transform 200ms ease;
+}
+
+.footer-link:hover {
+  color: rgb(21 128 61);
+  transform: translateX(2px);
+}
+
+/* =========================================
+   MOBILE PROTECTION & REDUCED MOTION
+========================================= */
+
+@media (max-width: 640px) {
+  h1, h2, h3, h4 {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 768px) {
+  .bn-container {
+    width: min(100% - 32px, 1200px);
+  }
+  .bn-section {
+    padding: 64px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================================================
+   BEEZNEST DESIGN SYSTEM
+   Phase 6B: Buttons + Consistency
+========================================================= */
+
+.beeznest-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  min-height: 48px;
+  padding: 0.75rem 1.25rem;
+
+  border-radius: 9999px;
+
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1;
+
+  text-decoration: none;
+  white-space: nowrap;
+
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    background-color 220ms ease,
+    border-color 220ms ease;
+}
+
+.beeznest-btn:hover {
+  transform: translateY(-2px);
+}
+
+.beeznest-btn:active {
+  transform: translateY(0);
+}
+
+.beeznest-btn-primary {
+  color: #ffffff;
+  border: 1px solid transparent;
+  background: linear-gradient(
+    135deg,
+    #6BC48C 0%,
+    #2F855A 100%
+  );
+
+  box-shadow:
+    0 10px 24px rgba(47, 133, 90, 0.18);
+}
+
+.beeznest-btn-primary:hover {
+  box-shadow:
+    0 14px 30px rgba(47, 133, 90, 0.26);
+}
+
+.beeznest-btn-secondary {
+  color: #14532D;
+  border: 1px solid #BDE8CB;
+  background: #ffffff;
+
+  box-shadow:
+    0 6px 18px rgba(20, 83, 45, 0.06);
+}
+
+.beeznest-btn-secondary:hover {
+  border-color: #94D8AB;
+  background: #F0FAF3;
+}
+
+/* Small buttons */
+.beeznest-btn-sm {
+  min-height: 42px;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* Mobile buttons */
+@media (max-width: 640px) {
+  .beeznest-btn {
+    min-height: 48px;
+  }
+
+  .beeznest-btn-sm {
+    min-height: 44px;
+  }
+}
+
+/* =========================================================
+   PREMIUM CARD SYSTEM
+========================================================= */
+
+.beeznest-card {
+  border: 1px solid #DCF3E3;
+  border-radius: 1.5rem;
+  background: #ffffff;
+
+  box-shadow:
+    0 10px 30px rgba(20, 83, 45, 0.06);
+
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.beeznest-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #BDE8CB;
+
+  box-shadow:
+    0 18px 40px rgba(20, 83, 45, 0.10);
+}
+
+/* Keep important cards from becoming too aggressive on mobile */
+@media (max-width: 640px) {
+  .beeznest-card:hover {
+    transform: none;
+  }
+}
+
+/* =========================================================
+   SECTION SYSTEM
+========================================================= */
+
+.beeznest-section {
+  position: relative;
+  width: 100%;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+.beeznest-section-heading {
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.beeznest-section-heading h2 {
+  margin: 0;
+  color: #14532D;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.beeznest-section-heading p {
+  margin-top: 1rem;
+  color: #475569;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 640px) {
+  .beeznest-section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .beeznest-section-heading {
+    text-align: left;
+  }
+
+  .beeznest-section-heading h2 {
+    font-size: 2rem;
+  }
 }

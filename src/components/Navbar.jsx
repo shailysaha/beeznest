@@ -1,260 +1,834 @@
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   ChevronDown,
   Menu,
   X,
+  ArrowRight,
 } from "lucide-react";
-// FIXED PATH HERE: Added "/context/"
-import { useLanguage } from "../context/LanguageContext"; 
+
+import { useLanguage } from "../context/LanguageContext";
+import logo from "../assets/beeznest-logo.jpeg";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [solutionsOpen, setSolutionsOpen] = useState(false);
-  
-  // Get the language state and setter from context
+  const [scrolled, setScrolled] = useState(false);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const { language, setLanguage, t } = useLanguage();
+
+  /* =========================================
+     SCROLL EFFECT
+  ========================================= */
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 30);
+    };
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  /* =========================================
+     CLOSE MOBILE MENU
+  ========================================= */
+
+  useEffect(() => {
+    setMobileOpen(false);
+    setSolutionsOpen(false);
+  }, [location.pathname]);
+
+  /* =========================================
+     CLOSE MENU
+  ========================================= */
 
   const closeMenu = () => {
     setMobileOpen(false);
     setSolutionsOpen(false);
   };
 
+  /* =========================================
+     SCROLL TO SECTION
+  ========================================= */
+
+  const goToSection = (id) => {
+    closeMenu();
+
+    const scrollToElement = () => {
+      const element = document.getElementById(id);
+
+      if (!element) return;
+
+      const y =
+        element.getBoundingClientRect().top +
+        window.pageYOffset -
+        100;
+
+      window.scrollTo({
+        top: y,
+        behavior: "smooth",
+      });
+    };
+
+    if (location.pathname === "/") {
+      scrollToElement();
+      return;
+    }
+
+    navigate("/");
+
+    setTimeout(scrollToElement, 200);
+  };
+
   return (
-    <header className="sticky top-0 z-50 border-b border-green-100 bg-white/95 backdrop-blur">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
+    <>
+      {/* =================================================
+          FLOATING NAVBAR
+      ================================================= */}
 
-        {/* Logo */}
-        <Link
-          to="/"
-          onClick={closeMenu}
-          className="flex items-center gap-2"
+      <header
+        className={`
+          fixed
+          left-0
+          right-0
+          top-0
+          z-50
+          flex
+          justify-center
+          px-3
+          transition-all
+          duration-300
+          sm:px-4
+          ${
+            scrolled
+              ? "pt-2 sm:pt-3"
+              : "pt-3 sm:pt-4"
+          }
+        `}
+      >
+        <nav
+          className={`
+            relative
+            flex
+            w-full
+            max-w-[1120px]
+            items-center
+            justify-between
+            border
+            border-white/70
+            bg-white/80
+            backdrop-blur-xl
+            transition-all
+            duration-300
+            ${
+              scrolled
+                ? "rounded-2xl px-3 py-2 shadow-lift sm:px-4"
+                : "rounded-[1.4rem] px-3 py-2.5 shadow-soft sm:rounded-full sm:px-5 sm:py-3"
+            }
+          `}
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#94D8AB] font-bold text-[#14532D]">
-            B
-          </div>
+          {/* =========================================
+              LOGO
+          ========================================= */}
 
-          <span className="text-2xl font-extrabold tracking-tight text-[#14532D]">
-            BeezNest
-          </span>
-        </Link>
-
-        {/* Desktop Navigation */}
-        <div className="hidden items-center gap-8 lg:flex">
-
-          <a
-            href="/#features"
-            className="text-sm font-medium text-slate-600 transition hover:text-[#2F855A]"
+          <Link
+            to="/"
+            onClick={closeMenu}
+            className="group flex shrink-0 items-center gap-2.5"
           >
-            {t("Features")}
-          </a>
-
-          <div className="relative">
-            <button
-              onClick={() => setSolutionsOpen(!solutionsOpen)}
-              className="flex items-center gap-1 text-sm font-medium text-slate-600 hover:text-[#2F855A]"
+            <div
+              className="
+                flex
+                h-10
+                w-10
+                shrink-0
+                items-center
+                justify-center
+                overflow-hidden
+                rounded-xl
+                bg-white
+                ring-1
+                ring-brand-100
+                shadow-sm
+                transition
+                duration-300
+                group-hover:scale-105
+                group-hover:shadow-soft
+              "
             >
-              {t("Solutions")}
-              <ChevronDown size={16} />
-            </button>
+              <img
+                src={logo}
+                alt="BeezNest"
+                className="h-full w-full object-contain"
+              />
+            </div>
 
-            {solutionsOpen && (
-              <div className="absolute left-0 top-8 w-52 rounded-2xl border border-green-100 bg-white p-2 shadow-xl">
-
-                <a
-                  href="/#restaurant"
-                  className="block rounded-xl px-4 py-3 text-sm text-slate-700 hover:bg-[#F0FAF3]"
-                  onClick={() => setSolutionsOpen(false)}
-                >
-                  {t("Restaurant")}
-                </a>
-
-                <a
-                  href="/#visa-agency"
-                  className="block rounded-xl px-4 py-3 text-sm text-slate-700 hover:bg-[#F0FAF3]"
-                  onClick={() => setSolutionsOpen(false)}
-                >
-                  {t("Student Visa Agency")}
-                </a>
-
+            <div className="hidden sm:block">
+              <div className="text-base font-extrabold tracking-tight text-brand-900">
+                BeezNest
               </div>
-            )}
-          </div>
 
-          <NavLink
-            to="/pricing"
-            className="text-sm font-medium text-slate-600 hover:text-[#2F855A]"
-          >
-            {t("Pricing")}
-          </NavLink>
-
-          <a
-            href="/#faq"
-            className="text-sm font-medium text-slate-600 hover:text-[#2F855A]"
-          >
-            {t("Resources")}
-          </a>
-        </div>
-
-        {/* Desktop Actions */}
-        <div className="hidden items-center gap-3 lg:flex">
-
-          {/* Language Toggle */}
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => setLanguage("en")}
-              className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
-                language === "en" 
-                  ? "bg-[#F0FAF3] text-[#14532D] font-bold" 
-                  : "text-slate-600 hover:text-[#2F855A]"
-              }`}
-            >
-              EN
-            </button>
-
-            <span className="text-slate-300">|</span>
-
-            <button
-              onClick={() => setLanguage("bn")}
-              className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
-                language === "bn" 
-                  ? "bg-[#F0FAF3] text-[#14532D] font-bold" 
-                  : "text-slate-600 hover:text-[#2F855A]"
-              }`}
-            >
-              BN
-            </button>
-          </div>
-
-          <Link
-            to="/login"
-            className="rounded-xl px-4 py-2.5 text-sm font-semibold text-[#14532D] hover:bg-[#F0FAF3]"
-          >
-            {t("Log in")}
+              <div className="text-[9px] font-bold tracking-[0.16em] text-slate-400">
+                BUSINESS MANAGER
+              </div>
+            </div>
           </Link>
 
-          <Link
-            to="/signup"
-            className="rounded-xl bg-[#94D8AB] px-5 py-2.5 text-sm font-bold text-[#14532D] transition hover:bg-[#6BC48C]"
-          >
-            {t("Start free trial")}
-          </Link>
-        </div>
+          {/* =========================================
+              DESKTOP NAVIGATION
+          ========================================= */}
 
-        {/* Mobile button */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="rounded-xl p-2 text-[#14532D] lg:hidden"
-          aria-label={t("Toggle navigation")}
-        >
-          {mobileOpen ? <X size={26} /> : <Menu size={26} />}
-        </button>
-      </nav>
+          <div className="hidden items-center gap-0.5 lg:flex">
 
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="border-t border-green-100 bg-white px-5 py-5 lg:hidden">
-
-          <div className="flex flex-col gap-2">
-
-            <a
-              href="/#features"
-              onClick={closeMenu}
-              className="rounded-xl px-4 py-3 text-slate-700 hover:bg-[#F0FAF3]"
+            {/* FEATURES */}
+            <button
+              type="button"
+              onClick={() =>
+                goToSection("feature-showcase")
+              }
+              className="
+                nav-link
+                group
+                relative
+                rounded-full
+                px-3.5
+                py-2
+                text-sm
+                font-semibold
+                text-slate-600
+                transition
+                hover:text-brand-700
+              "
             >
               {t("Features")}
-            </a>
 
-            <button
-              onClick={() => setSolutionsOpen(!solutionsOpen)}
-              className="flex items-center justify-between rounded-xl px-4 py-3 text-left text-slate-700 hover:bg-[#F0FAF3]"
-            >
-              {t("Solutions")}
-              <ChevronDown size={18} />
+              <span
+                className="
+                  absolute
+                  bottom-1
+                  left-1/2
+                  h-0.5
+                  w-0
+                  -translate-x-1/2
+                  rounded-full
+                  bg-brand-400
+                  transition-all
+                  duration-300
+                  group-hover:w-6
+                "
+              />
             </button>
 
-            {solutionsOpen && (
-              <div className="ml-4 space-y-1">
+            {/* HOW IT WORKS */}
+            <button
+              type="button"
+              onClick={() =>
+                goToSection("how-it-works")
+              }
+              className="
+                group
+                relative
+                rounded-full
+                px-3.5
+                py-2
+                text-sm
+                font-semibold
+                text-slate-600
+                transition
+                hover:text-brand-700
+              "
+            >
+              {t("How it works")}
 
-                <a
-                  href="/#restaurant"
-                  onClick={closeMenu}
-                  className="block rounded-xl px-4 py-3 text-sm text-slate-600 hover:bg-[#F0FAF3]"
+              <span
+                className="
+                  absolute
+                  bottom-1
+                  left-1/2
+                  h-0.5
+                  w-0
+                  -translate-x-1/2
+                  rounded-full
+                  bg-brand-400
+                  transition-all
+                  duration-300
+                  group-hover:w-6
+                "
+              />
+            </button>
+
+            {/* SOLUTIONS */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() =>
+                  setSolutionsOpen((value) => !value)
+                }
+                className="
+                  group
+                  flex
+                  items-center
+                  gap-1
+                  rounded-full
+                  px-3.5
+                  py-2
+                  text-sm
+                  font-semibold
+                  text-slate-600
+                  transition
+                  hover:bg-brand-50
+                  hover:text-brand-700
+                "
+              >
+                {t("Solutions")}
+
+                <ChevronDown
+                  size={15}
+                  className={`
+                    transition-transform
+                    duration-200
+                    ${
+                      solutionsOpen
+                        ? "rotate-180"
+                        : ""
+                    }
+                  `}
+                />
+              </button>
+
+              {/* DROPDOWN */}
+              {solutionsOpen && (
+                <div
+                  className="
+                    absolute
+                    left-0
+                    top-[calc(100%+10px)]
+                    w-60
+                    overflow-hidden
+                    rounded-2xl
+                    border
+                    border-brand-100
+                    bg-white/95
+                    p-2
+                    shadow-lift
+                    backdrop-blur-xl
+                  "
                 >
-                  {t("Restaurant")}
-                </a>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      goToSection("restaurant")
+                    }
+                    className="
+                      flex
+                      w-full
+                      items-center
+                      rounded-xl
+                      px-4
+                      py-3
+                      text-left
+                      text-sm
+                      font-semibold
+                      text-slate-700
+                      transition
+                      hover:bg-brand-50
+                      hover:text-brand-700
+                    "
+                  >
+                    Restaurant
+                  </button>
 
-                <a
-                  href="/#visa-agency"
-                  onClick={closeMenu}
-                  className="block rounded-xl px-4 py-3 text-sm text-slate-600 hover:bg-[#F0FAF3]"
-                >
-                  {t("Student Visa Agency")}
-                </a>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      goToSection("visa-agency")
+                    }
+                    className="
+                      flex
+                      w-full
+                      items-center
+                      rounded-xl
+                      px-4
+                      py-3
+                      text-left
+                      text-sm
+                      font-semibold
+                      text-slate-700
+                      transition
+                      hover:bg-brand-50
+                      hover:text-brand-700
+                    "
+                  >
+                    Student Visa Agency
+                  </button>
+                </div>
+              )}
+            </div>
 
-              </div>
-            )}
-
-            <Link
+            {/* PRICING */}
+            <NavLink
               to="/pricing"
-              onClick={closeMenu}
-              className="rounded-xl px-4 py-3 text-slate-700 hover:bg-[#F0FAF3]"
+              className="
+                group
+                relative
+                rounded-full
+                px-3.5
+                py-2
+                text-sm
+                font-semibold
+                text-slate-600
+                transition
+                hover:text-brand-700
+              "
             >
               {t("Pricing")}
-            </Link>
 
-            <a
-              href="/#faq"
-              onClick={closeMenu}
-              className="rounded-xl px-4 py-3 text-slate-700 hover:bg-[#F0FAF3]"
+              <span
+                className="
+                  absolute
+                  bottom-1
+                  left-1/2
+                  h-0.5
+                  w-0
+                  -translate-x-1/2
+                  rounded-full
+                  bg-brand-400
+                  transition-all
+                  duration-300
+                  group-hover:w-6
+                "
+              />
+            </NavLink>
+
+            {/* FAQ */}
+            <button
+              type="button"
+              onClick={() => goToSection("faq")}
+              className="
+                group
+                relative
+                rounded-full
+                px-3.5
+                py-2
+                text-sm
+                font-semibold
+                text-slate-600
+                transition
+                hover:text-brand-700
+              "
             >
-              {t("Resources")}
-            </a>
+              {t("FAQ")}
 
-            {/* Mobile Language Toggle */}
-            <div className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-[#F0FAF3] p-1">
+              <span
+                className="
+                  absolute
+                  bottom-1
+                  left-1/2
+                  h-0.5
+                  w-0
+                  -translate-x-1/2
+                  rounded-full
+                  bg-brand-400
+                  transition-all
+                  duration-300
+                  group-hover:w-6
+                "
+              />
+            </button>
+          </div>
+
+          {/* =========================================
+              RIGHT SIDE
+          ========================================= */}
+
+          <div className="hidden items-center gap-2 md:flex">
+
+            {/* LANGUAGE */}
+            <div
+              className="
+                flex
+                items-center
+                gap-1
+                rounded-full
+                border
+                border-brand-100
+                bg-brand-50
+                p-1
+              "
+            >
               <button
+                type="button"
                 onClick={() => setLanguage("en")}
-                className={`flex-1 rounded-lg py-2 text-sm font-medium transition ${
-                  language === "en" 
-                    ? "bg-white text-[#14532D] shadow-sm font-bold" 
-                    : "text-slate-600"
-                }`}
+                className={`
+                  rounded-full
+                  px-2.5
+                  py-1.5
+                  text-xs
+                  font-bold
+                  transition
+                  ${
+                    language === "en"
+                      ? "bg-white text-brand-900 shadow-sm"
+                      : "text-slate-500 hover:text-brand-700"
+                  }
+                `}
               >
-                English (EN)
+                EN
               </button>
+
               <button
+                type="button"
                 onClick={() => setLanguage("bn")}
-                className={`flex-1 rounded-lg py-2 text-sm font-medium transition ${
-                  language === "bn" 
-                    ? "bg-white text-[#14532D] shadow-sm font-bold" 
-                    : "text-slate-600"
-                }`}
+                className={`
+                  rounded-full
+                  px-2.5
+                  py-1.5
+                  text-xs
+                  font-bold
+                  transition
+                  ${
+                    language === "bn"
+                      ? "bg-white text-brand-900 shadow-sm"
+                      : "text-slate-500 hover:text-brand-700"
+                  }
+                `}
               >
-                বাংলা (BN)
+                BN
               </button>
             </div>
 
-            <div className="mt-3 grid grid-cols-2 gap-3">
+            {/* LOGIN */}
+            <Link
+              to="/login"
+              className="
+                rounded-full
+                px-3.5
+                py-2.5
+                text-sm
+                font-bold
+                text-brand-900
+                transition
+                hover:bg-brand-50
+              "
+            >
+              {t("Log in")}
+            </Link>
+
+            {/* CTA */}
+            <Link
+              to="/signup"
+              className="
+                bn-gradient-button
+                group
+                flex
+                items-center
+                gap-2
+                rounded-full
+                px-5
+                py-2.5
+                text-sm
+                font-bold
+              "
+            >
+              <span>{t("Start free trial")}</span>
+
+              <ArrowRight
+                size={15}
+                className="
+                  transition-transform
+                  duration-200
+                  group-hover:translate-x-1
+                "
+              />
+            </Link>
+          </div>
+
+          {/* =========================================
+              MOBILE MENU BUTTON
+          ========================================= */}
+
+          <button
+            type="button"
+            onClick={() =>
+              setMobileOpen((value) => !value)
+            }
+            className="
+              flex
+              h-10
+              w-10
+              items-center
+              justify-center
+              rounded-full
+              bg-brand-50
+              text-brand-900
+              transition
+              hover:bg-brand-100
+              md:flex
+              lg:hidden
+            "
+            aria-label="Toggle navigation"
+          >
+            {mobileOpen ? (
+              <X size={21} />
+            ) : (
+              <Menu size={21} />
+            )}
+          </button>
+        </nav>
+
+        {/* =========================================
+            MOBILE MENU
+        ========================================= */}
+
+        {mobileOpen && (
+          <div
+            className="
+              absolute
+              left-3
+              right-3
+              top-[calc(100%+8px)]
+              overflow-hidden
+              rounded-3xl
+              border
+              border-brand-100
+              bg-white/95
+              p-3
+              shadow-lift
+              backdrop-blur-xl
+              md:left-4
+              md:right-4
+            "
+          >
+            <div className="space-y-1">
+
+              <button
+                type="button"
+                onClick={() =>
+                  goToSection("feature-showcase")
+                }
+                className="
+                  w-full
+                  rounded-2xl
+                  px-4
+                  py-3.5
+                  text-left
+                  text-base
+                  font-bold
+                  text-slate-700
+                  transition
+                  hover:bg-brand-50
+                "
+              >
+                {t("Features")}
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  goToSection("how-it-works")
+                }
+                className="
+                  w-full
+                  rounded-2xl
+                  px-4
+                  py-3.5
+                  text-left
+                  text-base
+                  font-bold
+                  text-slate-700
+                  transition
+                  hover:bg-brand-50
+                "
+              >
+                {t("How it works")}
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  goToSection("restaurant")
+                }
+                className="
+                  w-full
+                  rounded-2xl
+                  px-4
+                  py-3.5
+                  text-left
+                  text-base
+                  font-bold
+                  text-slate-700
+                  transition
+                  hover:bg-brand-50
+                "
+              >
+                Restaurant
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  goToSection("visa-agency")
+                }
+                className="
+                  w-full
+                  rounded-2xl
+                  px-4
+                  py-3.5
+                  text-left
+                  text-base
+                  font-bold
+                  text-slate-700
+                  transition
+                  hover:bg-brand-50
+                "
+              >
+                Student Visa Agency
+              </button>
+
+              <NavLink
+                to="/pricing"
+                className="
+                  block
+                  rounded-2xl
+                  px-4
+                  py-3.5
+                  text-base
+                  font-bold
+                  text-slate-700
+                  transition
+                  hover:bg-brand-50
+                "
+              >
+                {t("Pricing")}
+              </NavLink>
+
+              <button
+                type="button"
+                onClick={() => goToSection("faq")}
+                className="
+                  w-full
+                  rounded-2xl
+                  px-4
+                  py-3.5
+                  text-left
+                  text-base
+                  font-bold
+                  text-slate-700
+                  transition
+                  hover:bg-brand-50
+                "
+              >
+                {t("FAQ")}
+              </button>
+            </div>
+
+            {/* MOBILE LANGUAGE */}
+            <div
+              className="
+                mt-3
+                flex
+                items-center
+                justify-between
+                rounded-2xl
+                bg-brand-50
+                p-2
+              "
+            >
+              <span className="pl-2 text-sm font-bold text-slate-500">
+                Language
+              </span>
+
+              <div className="flex gap-1">
+                <button
+                  type="button"
+                  onClick={() => setLanguage("en")}
+                  className={`
+                    rounded-full
+                    px-4
+                    py-2
+                    text-xs
+                    font-bold
+                    ${
+                      language === "en"
+                        ? "bg-white text-brand-900 shadow-sm"
+                        : "text-slate-500"
+                    }
+                  `}
+                >
+                  EN
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setLanguage("bn")}
+                  className={`
+                    rounded-full
+                    px-4
+                    py-2
+                    text-xs
+                    font-bold
+                    ${
+                      language === "bn"
+                        ? "bg-white text-brand-900 shadow-sm"
+                        : "text-slate-500"
+                    }
+                  `}
+                >
+                  BN
+                </button>
+              </div>
+            </div>
+
+            {/* MOBILE ACTIONS */}
+            <div className="mt-3 grid grid-cols-2 gap-2">
               <Link
                 to="/login"
-                onClick={closeMenu}
-                className="rounded-xl border border-green-200 px-4 py-3 text-center font-semibold text-[#14532D]"
+                className="
+                  flex
+                  items-center
+                  justify-center
+                  rounded-2xl
+                  border
+                  border-brand-200
+                  px-4
+                  py-3.5
+                  text-sm
+                  font-bold
+                  text-brand-900
+                "
               >
                 {t("Log in")}
               </Link>
 
               <Link
                 to="/signup"
-                onClick={closeMenu}
-                className="rounded-xl bg-[#94D8AB] px-4 py-3 text-center font-bold text-[#14532D]"
+                className="
+                  bn-gradient-button
+                  flex
+                  items-center
+                  justify-center
+                  rounded-2xl
+                  px-4
+                  py-3.5
+                  text-sm
+                  font-bold
+                "
               >
-                {t("Start free")}
+                {t("Start free trial")}
               </Link>
             </div>
           </div>
-        </div>
-      )}
-    </header>
+        )}
+      </header>
+    </>
   );
 }

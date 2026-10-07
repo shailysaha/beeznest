@@ -1,27 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
+  ArrowDown,
   ArrowRight,
+  ArrowUpRight,
+  BarChart3 as BarChart3Icon,
   Bot,
+  Building2,
   Check,
   ChevronDown,
   Globe2,
+  Languages,
   LayoutDashboard,
+  Link2,
   MessageSquareText,
+  NotebookTabs,
+  Pause,
+  Play,
   QrCode,
+  Settings2,
   Smartphone,
   Sparkles,
   Store,
+  Table2,
+  Unplug,
+  UserPlus,
   Users,
   Zap,
 } from "lucide-react";
 
+import TrustAndBusiness from "../components/TrustAndBusiness";
+import HowItWorks from "../components/HowItWorks";
+import FeatureShowcase from "../components/FeatureShowcase";
+import SpecialFeatures from "../components/SpecialFeatures";
+import AIManagerSpotlight from "../components/AIManagerSpotlight";
+import WebsiteBuilderShowcase from "../components/WebsiteBuilderShowcase";
+import PricingPreview from "../components/PricingPreview";
+import Testimonials from "../components/Testimonials";
+import FAQ from "../components/FAQ";
+import FinalCTA from "../components/FinalCTA";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import MockDashboard from "../components/MockDashboard";
 import SectionHeading from "../components/SectionHeading";
-// Import the language hook
 import { useLanguage } from "../context/LanguageContext";
 
 const fadeUp = {
@@ -38,49 +60,30 @@ const fadeUp = {
 export default function Home() {
   const navigate = useNavigate();
   const [activeBusiness, setActiveBusiness] = useState("restaurant");
-  const [openFaq, setOpenFaq] = useState(null);
-  
-  // Get the translation function 't'
-  const { t , isBangla } = useLanguage();
 
-  // Step 13: remember chosen business type + go to signup
-  const chooseBusiness = (type) => {
-    localStorage.setItem("biznest_business_type", type);
+  // Get the translation function 't'
+  const { t, isBangla } = useLanguage();
+
+  // Step 13.2: Add the handler
+  const handleBusinessType = (businessType) => {
+    localStorage.setItem("biznest_business_type", businessType);
     navigate("/signup");
   };
 
-  const faqs = [
-    {
-      question: "How does the free trial work?",
-      answer:
-        "The trial lets you explore the BeezNest experience before choosing a plan. Final trial terms will be confirmed by the BeezNest team.",
-    },
-    {
-      question: "Do I need technical knowledge?",
-      answer:
-        "No. BeezNest is designed to keep business management simple and easy to use.",
-    },
-    {
-      question: "Can I use my own domain?",
-      answer:
-        "Yes, custom domain support can be configured as part of the website setup.",
-    },
-    {
-      question: "Is my data safe?",
-      answer:
-        "BeezNest is designed with secure business data handling in mind. Final security and privacy policies should be confirmed before launch.",
-    },
-    {
-      question: "Does it work in Bangla?",
-      answer:
-        "Yes. BeezNest is planned for both Bangla and English business experiences.",
-    },
-    {
-      question: "How do I pay?",
-      answer:
-        "The platform is planned to support local payment methods including bKash and Nagad.",
-    },
-  ];
+  // Step 7K: Connect Step 4 cards to Step 7 showcase
+  const previewBusiness = (type) => {
+    localStorage.setItem("biznest_business_type", type);
+    setActiveBusiness(type === "restaurant" ? "restaurant" : "visa");
+
+    setTimeout(() => {
+      document
+        .getElementById("feature-showcase")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+    }, 50);
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -89,273 +92,495 @@ export default function Home() {
       {/* =====================================================
           HERO
       ===================================================== */}
-      <section className="overflow-hidden bg-[#F0FAF3]">
-        <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 py-20 lg:grid-cols-2 lg:px-8 lg:py-28">
+      <section className="relative isolate overflow-hidden bg-white">
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute -right-32 -top-32 h-[520px] w-[520px] rounded-full bg-brand-200/50 blur-3xl animate-drift" />
+          <div className="absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full bg-brand-100/70 blur-3xl" />
+          <div className="absolute inset-x-0 bottom-0 h-72 opacity-40 bn-honeycomb [mask-image:linear-gradient(to_bottom,transparent,black)]" />
+        </div>
+
+        <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 pb-20 pt-36 sm:pb-24 sm:pt-40 lg:grid-cols-[0.9fr_1.1fr] lg:gap-8 lg:px-8 lg:pb-28 lg:pt-44">
           <motion.div
             initial="hidden"
             animate="visible"
             variants={fadeUp}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.7 }}
+            className="relative z-10"
           >
-            <div className="inline-flex items-center gap-2 rounded-full border border-green-200 bg-white px-4 py-2 text-sm font-semibold text-[#2F855A] shadow-sm">
-              <Sparkles size={16} />
-              {t("Built for restaurants and visa agencies")}
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-brand-700 shadow-soft backdrop-blur">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-400 opacity-60" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand-700" />
+              </span>
+              {t("AI business manager for restaurants and agencies")}
             </div>
 
-            <h1 
-             className={`mt-6 max-w-3xl font-black tracking-tight text-[#14532D] ${
-             isBangla 
-               ? "text-4xl sm:text-5xl lg:text-6xl leading-tight sm:leading-tight" // Smaller size for Bengali
-               : "text-5xl sm:text-6xl lg:text-7xl" // Original size for English
-}`}
->
-  {t("Run your business.")}
-  <br />
-  <span className="text-[#2F855A]">{t("Grow it smarter.")}</span>
-</h1>
+            <h1
+              className={`
+                mt-7
+                max-w-3xl
+                font-black
+                tracking-[-0.035em]
+                text-brand-900
+                ${
+                  isBangla
+                    ? "text-4xl leading-[1.15] sm:text-5xl lg:text-6xl"
+                    : "text-5xl leading-[1.02] sm:text-6xl lg:text-[72px]"
+                }
+              `}
+            >
+              {t("Run your business.")}
+              <br />
+              <span className="relative inline-block">
+                <span className="bn-gradient-text">
+                  {t("Grow it smarter.")}
+                </span>
+                <svg
+                  className="absolute -bottom-4 left-0 h-4 w-full overflow-visible"
+                  viewBox="0 0 300 18"
+                  fill="none"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M3 12C65 4 120 17 178 8C220 2 257 7 297 4"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    className="text-brand-300"
+                  />
+                </svg>
+              </span>
+            </h1>
 
-            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600 sm:text-xl">
+            <p className="mt-8 max-w-xl text-base leading-8 text-slate-600 sm:text-lg">
               {t("CRM, website and an AI business manager, in one simple platform.")}
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
                 to="/signup"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#94D8AB] px-6 py-3.5 font-bold text-[#14532D] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#6BC48C]"
+                className="bn-gradient-button group inline-flex items-center justify-center gap-2.5 rounded-xl px-6 py-3.5 text-sm font-extrabold sm:text-base"
               >
-                {t("Start free trial")}
-                <ArrowRight size={18} />
+                <span>{t("Start free trial")}</span>
+                <ArrowRight
+                  size={18}
+                  className="transition-transform duration-200 group-hover:translate-x-1"
+                />
               </Link>
 
-              <button className="rounded-xl border border-[#94D8AB] bg-white px-6 py-3.5 font-bold text-[#14532D] transition hover:bg-[#F0FAF3]">
+              <button
+                type="button"
+                onClick={() => {
+                  const section = document.getElementById("feature-showcase");
+                  section?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }}
+                className="group inline-flex items-center justify-center gap-2.5 rounded-xl border border-brand-200 bg-white/80 px-6 py-3.5 text-sm font-extrabold text-brand-900 shadow-sm backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:bg-brand-50 hover:shadow-soft sm:text-base"
+              >
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-100 text-brand-700 transition group-hover:bg-brand-200">
+                  <Play size={13} fill="currentColor" />
+                </span>
                 {t("Watch 2-min demo")}
               </button>
             </div>
 
-            <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-600">
-              <span className="flex items-center gap-2">
-                <Check size={16} className="text-[#2F855A]" />
-                {t("CRM + website + AI")}
-              </span>
+            <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <div className="flex -space-x-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-brand-100 text-xs font-bold text-brand-900">
+                  B
+                </div>
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-brand-200 text-xs font-bold text-brand-900">
+                  ৳
+                </div>
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-brand-300 text-xs font-bold text-brand-900">
+                  AI
+                </div>
+              </div>
 
-              <span className="flex items-center gap-2">
-                <Check size={16} className="text-[#2F855A]" />
-                {t("Bangla & English")}
-              </span>
-
-              <span className="flex items-center gap-2">
-                <Check size={16} className="text-[#2F855A]" />
-                {t("bKash & Nagad ready")}
-              </span>
+              <div>
+                <div className="flex items-center gap-1 text-sm font-bold text-brand-900">
+                  <Check size={15} className="text-brand-700" />
+                  {t("Made for businesses in Bangladesh")}
+                </div>
+                <p className="mt-0.5 text-xs text-slate-500">
+                  {t("Bangla + English")} · {t("Local payments")}
+                </p>
+              </div>
             </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.15 }}
+            initial={{ opacity: 0, x: 40, scale: 0.96 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.15 }}
+            className="relative mx-auto w-full max-w-[620px] px-2 sm:px-5"
           >
-            <MockDashboard />
+            <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-200/60 blur-3xl" />
+
+            <div className="relative z-20 mb-7 flex justify-center">
+              <div className="inline-flex rounded-full border border-brand-200 bg-white/80 p-1 shadow-soft backdrop-blur-xl">
+                <button
+                  type="button"
+                  onClick={() => setActiveBusiness("restaurant")}
+                  className={`rounded-full px-4 py-2 text-xs font-bold transition sm:px-5 sm:text-sm ${
+                    activeBusiness === "restaurant"
+                      ? "bg-brand-900 text-white shadow-sm"
+                      : "text-slate-500 hover:text-brand-700"
+                  }`}
+                >
+                  🍽️ {t("Restaurant")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveBusiness("visa-agency")}
+                  className={`rounded-full px-4 py-2 text-xs font-bold transition sm:px-5 sm:text-sm ${
+                    activeBusiness === "visa-agency"
+                      ? "bg-brand-900 text-white shadow-sm"
+                      : "text-slate-500 hover:text-brand-700"
+                  }`}
+                >
+                  🌍 {t("Visa Agency")}
+                </button>
+              </div>
+            </div>
+
+            <div className="relative z-10 mx-auto w-full max-w-[520px]">
+              <MockDashboard businessType={activeBusiness} />
+            </div>
+
+            <motion.div
+              animate={{ y: [0, -7, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -left-3 top-24 z-20 hidden rounded-2xl border border-white/70 bg-white/75 p-3 shadow-lift backdrop-blur-xl sm:block lg:-left-10"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-100">
+                  <Zap size={18} className="text-brand-700" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-medium text-slate-400">
+                    {t("Sales")}
+                  </p>
+                  <p className="text-sm font-extrabold text-brand-900">
+                    +12.4%
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -right-2 top-36 z-20 hidden rounded-2xl border border-white/70 bg-white/75 p-3 shadow-lift backdrop-blur-xl sm:block lg:-right-8"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-100">
+                  <Store size={18} className="text-brand-700" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-medium text-slate-400">
+                    {t("New order")}
+                  </p>
+                  <p className="text-sm font-extrabold text-brand-900">
+                    ৳2,450
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -bottom-5 left-1/2 z-20 hidden w-64 -translate-x-1/2 rounded-2xl border border-white/70 bg-white/80 p-4 shadow-lift backdrop-blur-xl sm:block"
+            >
+              <div className="flex items-start gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-900 text-white">
+                  <Bot size={17} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-brand-900">
+                    {t("AI tip")}
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-slate-500">
+                    {t("Try a combo offer on Tuesday to improve repeat orders.")}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
+      
+      {/* =====================================================
+          STEP 3: TRUST AND BUSINESS
+      ===================================================== */}
+      <TrustAndBusiness />
 
       {/* =====================================================
-          TRUST STRIP
+          STEP 4 — PROBLEM → SOLUTION
       ===================================================== */}
-      <section className="border-b border-green-100 bg-white py-8">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-10 gap-y-4 px-5 text-sm text-slate-500 lg:px-8">
-          <span className="font-semibold text-slate-600">
-            {t("Built for growing businesses")}
-          </span>
+      <section
+        id="problem-solution"
+        className="relative overflow-hidden bg-white py-20 sm:py-24 lg:py-28"
+      >
+        <div className="pointer-events-none absolute left-1/2 top-0 h-80 w-80 -translate-x-1/2 rounded-full bg-[#DCF3E3]/70 blur-[110px]" />
 
-          <span>{t("CRM")}</span>
-          <span>{t("Website")}</span>
-          <span>{t("AI Manager")}</span>
-          <span>{t("Bangla + English")}</span>
-          <span>{t("Local Payments")}</span>
-        </div>
-      </section>
-
-      {/* =====================================================
-          CHOOSE BUSINESS
-      ===================================================== */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <SectionHeading
-            eyebrow={t("Choose your business")}
-            title={t("One platform, built around your business")}
-            description={t("Start with the tools that match how your business actually works.")}
-          />
-
-          <div className="mt-14 grid gap-6 md:grid-cols-2">
-            {/* Restaurant */}
-            <motion.div
-              id="restaurant"
-              whileHover={{ y: -5 }}
-              className="flex flex-col rounded-3xl border border-green-100 bg-white p-8 shadow-sm transition hover:shadow-xl"
-            >
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F0FAF3] text-3xl">
-                🍽️
-              </div>
-
-              <h3 className="mt-6 text-2xl font-bold text-[#14532D]">
-                {t("Restaurant")}
-              </h3>
-
-              <p className="mt-3 text-slate-600">
-                {t("Manage tables, orders, customers and profitability from one simple dashboard.")}
-              </p>
-
-              <ul className="mt-6 space-y-3">
-                {[
-                  "Table & order management",
-                  "Customer loyalty tools",
-                  "Sales and profit reports",
-                ].map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-center gap-3 text-sm text-slate-600"
-                  >
-                    <Check size={17} className="text-[#2F855A]" />
-                    {t(item)}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <button
-                  onClick={() => chooseBusiness("restaurant")}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#94D8AB] px-5 py-3 font-bold text-[#14532D] transition hover:-translate-y-0.5 hover:bg-[#6BC48C] focus:outline-none focus:ring-4 focus:ring-[#BDE8CB]"
-                >
-                  {t("Start with Restaurant")}
-                  <ArrowRight size={16} />
-                </button>
-
-                <a
-                  href="#features"
-                  className="inline-flex items-center gap-2 font-bold text-[#2F855A] hover:underline"
-                >
-                  {t("See restaurant features")}
-                </a>
-              </div>
-            </motion.div>
-
-            {/* Visa Agency */}
-            <motion.div
-              id="visa-agency"
-              whileHover={{ y: -5 }}
-              className="flex flex-col rounded-3xl border border-green-100 bg-white p-8 shadow-sm transition hover:shadow-xl"
-            >
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F0FAF3]">
-                <Globe2 size={30} className="text-[#2F855A]" />
-              </div>
-
-              <h3 className="mt-6 text-2xl font-bold text-[#14532D]">
-                {t("Student Visa Agency")}
-              </h3>
-
-              <p className="mt-3 text-slate-600">
-                {t("Track leads, documents, applications and follow-ups without spreadsheet chaos.")}
-              </p>
-
-              <ul className="mt-6 space-y-3">
-                {["Lead pipeline", "Document checklist", "Follow-up reminders"].map(
-                  (item) => (
-                    <li
-                      key={item}
-                      className="flex items-center gap-3 text-sm text-slate-600"
-                    >
-                      <Check size={17} className="text-[#2F855A]" />
-                      {t(item)}
-                    </li>
-                  )
-                )}
-              </ul>
-
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <button
-                  onClick={() => chooseBusiness("visa-agency")}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#94D8AB] px-5 py-3 font-bold text-[#14532D] transition hover:-translate-y-0.5 hover:bg-[#6BC48C] focus:outline-none focus:ring-4 focus:ring-[#BDE8CB]"
-                >
-                  {t("Start with Visa Agency")}
-                  <ArrowRight size={16} />
-                </button>
-
-                <a
-                  href="#features"
-                  className="inline-flex items-center gap-2 font-bold text-[#2F855A] hover:underline"
-                >
-                  {t("See agency features")}
-                </a>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================
-          PROBLEM → SOLUTION
-      ===================================================== */}
-      <section className="bg-[#F0FAF3] py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <SectionHeading
-            eyebrow={t("Simplify your stack")}
-            title={t("Stop switching between tools")}
-            description={t("Bring your CRM, website and business insights together.")}
-          />
-
-          <div className="mt-14 grid items-center gap-8 lg:grid-cols-2">
-            <div className="rounded-3xl border border-red-100 bg-white p-8">
-              <p className="text-sm font-bold uppercase tracking-wider text-red-500">
-                {t("Before")}
-              </p>
-
-              <h3 className="mt-3 text-2xl font-bold text-slate-800">
-                {t("Too many tools")}
-              </h3>
-
-              <div className="mt-7 grid grid-cols-2 gap-4">
-                {["Notebook", "Spreadsheet", "Website", "CRM"].map((item) => (
-                  <div
-                    key={item}
-                    className="rounded-2xl border border-slate-200 p-5 text-center text-sm font-semibold text-slate-600"
-                  >
-                    {t(item)}
-                  </div>
-                ))}
-              </div>
-
-              <p className="mt-6 text-sm leading-6 text-slate-500">
-                {t("Too many tools, too many bills, nothing talks to each other.")}
-              </p>
+        <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#BDE8CB] bg-[#F0FAF3] px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#2F855A]">
+              <Sparkles size={13} />
+              {t("One connected platform")}
             </div>
 
-            <div className="rounded-3xl border border-green-200 bg-white p-8 shadow-sm">
-              <p className="text-sm font-bold uppercase tracking-wider text-[#2F855A]">
-                {t("After")}
-              </p>
+            <h2 className="mt-5 text-3xl font-black tracking-tight text-[#14532D] sm:text-4xl lg:text-5xl">
+              {t("Stop switching between tools.")}
+            </h2>
 
-              <h3 className="mt-3 text-2xl font-bold text-[#14532D]">
-                {t("One simple platform")}
-              </h3>
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
+              {t("Bring your CRM, website and business insights together in one simple platform.")}
+            </p>
+          </div>
 
-              <div className="mt-7 flex items-center justify-center">
-                <div className="flex h-28 w-28 items-center justify-center rounded-full bg-[#94D8AB] text-center font-black text-[#14532D] shadow-lg">
-                  {t("BeezNest")}
+          <div className="relative mt-14 grid gap-6 lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-8">
+            {/* BEFORE */}
+            <div className="relative overflow-hidden rounded-[2rem] border border-slate-200 bg-[#F8FAF9] p-6 sm:p-8">
+              <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-slate-200/60 blur-3xl" />
+              <div className="relative">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="inline-flex rounded-full bg-slate-200 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">
+                      {t("Before")}
+                    </span>
+                    <h3 className="mt-4 text-2xl font-black tracking-tight text-slate-800 sm:text-3xl">
+                      {t("Too many tools.")}
+                    </h3>
+                    <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
+                      {t("Your business information is scattered across different places.")}
+                    </p>
+                  </div>
+                  <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-slate-200 text-slate-500 sm:flex">
+                    <Settings2 size={22} />
+                  </div>
+                </div>
+
+                <div className="relative mt-8 min-h-[310px] overflow-hidden rounded-3xl border border-slate-200 bg-white p-5">
+                  <svg aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 500 310" preserveAspectRatio="none">
+                    <path d="M120 65 C220 20 270 145 360 80" fill="none" stroke="#CBD5D1" strokeWidth="2" strokeDasharray="5 7" />
+                    <path d="M105 205 C190 125 275 235 395 170" fill="none" stroke="#CBD5D1" strokeWidth="2" strokeDasharray="5 7" />
+                    <path d="M390 70 C300 100 260 185 150 250" fill="none" stroke="#D7DEDA" strokeWidth="2" strokeDasharray="5 7" />
+                    <path d="M75 145 C160 95 310 250 425 235" fill="none" stroke="#D7DEDA" strokeWidth="2" strokeDasharray="5 7" />
+                  </svg>
+
+                  <div className="absolute left-5 top-7 w-[145px] -rotate-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition duration-500 hover:-translate-y-1 hover:rotate-0">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
+                        <NotebookTabs size={16} />
+                      </div>
+                      <span className="text-xs font-extrabold text-slate-700">{t("Notebook")}</span>
+                    </div>
+                    <div className="mt-3 space-y-2">
+                      <div className="h-2 w-20 rounded-full bg-slate-100" />
+                      <div className="h-2 w-28 rounded-full bg-slate-100" />
+                      <div className="h-2 w-16 rounded-full bg-slate-100" />
+                    </div>
+                  </div>
+
+                  <div className="absolute right-5 top-9 w-[150px] rotate-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition duration-500 hover:-translate-y-1 hover:rotate-0">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
+                        <BarChart3Icon size={16} />
+                      </div>
+                      <span className="text-xs font-extrabold text-slate-700">{t("Spreadsheet")}</span>
+                    </div>
+                    <div className="mt-3 grid grid-cols-4 gap-1">
+                      {Array.from({ length: 12 }).map((_, index) => (
+                        <div key={index} className="h-4 rounded bg-slate-100" />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="absolute bottom-7 left-7 w-[150px] rotate-2 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition duration-500 hover:-translate-y-1 hover:rotate-0">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
+                        <Globe2 size={16} />
+                      </div>
+                      <span className="text-xs font-extrabold text-slate-700">{t("Website")}</span>
+                    </div>
+                    <div className="mt-3 rounded-xl bg-slate-50 p-2">
+                      <div className="h-2 w-14 rounded-full bg-slate-200" />
+                      <div className="mt-2 h-12 rounded-lg bg-slate-100" />
+                    </div>
+                  </div>
+
+                  <div className="absolute bottom-8 right-7 w-[145px] -rotate-2 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition duration-500 hover:-translate-y-1 hover:rotate-0">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
+                        <Users size={16} />
+                      </div>
+                      <span className="text-xs font-extrabold text-slate-700">{t("CRM")}</span>
+                    </div>
+                    <div className="mt-3 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className="h-5 w-5 rounded-full bg-slate-200" />
+                        <span className="h-2 w-16 rounded-full bg-slate-100" />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="h-5 w-5 rounded-full bg-slate-200" />
+                        <span className="h-2 w-12 rounded-full bg-slate-100" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-4 py-2 text-[10px] font-bold text-slate-400 shadow-sm backdrop-blur">
+                    <Link2 size={13} />
+                    {t("Disconnected")}
+                  </div>
+                </div>
+
+                <div className="mt-6 flex items-start gap-3">
+                  <div className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-slate-300" />
+                  <p className="text-sm font-semibold leading-6 text-slate-500">
+                    {t("Too many tools, too many logins, and information that never stays in sync.")}
+                  </p>
                 </div>
               </div>
-
-              <div className="mt-7 grid grid-cols-3 gap-3 text-center text-xs font-semibold text-slate-600">
-                <div className="rounded-xl bg-[#F0FAF3] p-3">{t("CRM")}</div>
-                <div className="rounded-xl bg-[#F0FAF3] p-3">{t("Website")}</div>
-                <div className="rounded-xl bg-[#F0FAF3] p-3">{t("AI Manager")}</div>
-              </div>
-
-              <p className="mt-6 text-sm font-semibold text-[#2F855A]">
-                {t("One profile. One login. One simple bill.")}
-              </p>
             </div>
+
+            {/* CENTER */}
+            <div className="relative z-20 flex items-center justify-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[#BDE8CB] bg-white text-[#2F855A] shadow-lg">
+                <ArrowRight size={23} className="hidden lg:block" />
+                <span className="text-lg font-black lg:hidden">↓</span>
+              </div>
+              <div className="absolute left-full hidden h-px w-8 border-t-2 border-dashed border-[#BDE8CB] lg:block" />
+              <div className="absolute right-full hidden h-px w-8 border-t-2 border-dashed border-[#CBD5D1] lg:block" />
+            </div>
+
+            {/* AFTER */}
+            <div className="relative overflow-hidden rounded-[2rem] border border-[#BDE8CB] bg-[#F0FAF3] p-6 shadow-[0_20px_60px_rgba(47,133,90,0.10)] sm:p-8">
+              <div className="pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full bg-[#BDE8CB]/70 blur-3xl" />
+              <div className="relative">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="inline-flex rounded-full bg-[#DCF3E3] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#2F855A]">
+                      {t("After")}
+                    </span>
+                    <h3 className="mt-4 text-2xl font-black tracking-tight text-[#14532D] sm:text-3xl">
+                      {t("One connected platform.")}
+                    </h3>
+                    <p className="mt-2 max-w-md text-sm leading-6 text-slate-600">
+                      {t("Everything works together so you can focus on growing your business.")}
+                    </p>
+                  </div>
+                  <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-[#DCF3E3] text-[#2F855A] sm:flex">
+                    <Zap size={22} />
+                  </div>
+                </div>
+
+                <div className="relative mt-8 min-h-[310px] overflow-hidden rounded-3xl border border-[#BDE8CB] bg-white p-5 shadow-sm">
+                  <svg aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 500 310" preserveAspectRatio="none">
+                    <path d="M250 145 C185 105 130 70 95 55" fill="none" stroke="#94D8AB" strokeWidth="2" />
+                    <path d="M250 155 C180 165 125 180 85 195" fill="none" stroke="#94D8AB" strokeWidth="2" />
+                    <path d="M250 165 C205 215 155 245 105 255" fill="none" stroke="#94D8AB" strokeWidth="2" />
+                  </svg>
+
+                  <div className="absolute left-1/2 top-1/2 z-10 w-[190px] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-[#BDE8CB] bg-white p-4 shadow-[0_15px_40px_rgba(47,133,90,0.14)] sm:w-[215px]">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-[8px] font-semibold text-slate-400">BeezNest</p>
+                        <p className="text-xs font-black text-[#14532D]">{t("Business dashboard")}</p>
+                      </div>
+                      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#DCF3E3] text-[#2F855A]">
+                        <LayoutDashboard size={14} />
+                      </div>
+                    </div>
+                    <div className="mt-4 grid grid-cols-3 gap-1.5">
+                      <div className="rounded-lg bg-[#F0FAF3] p-2">
+                        <p className="text-[7px] text-slate-400">{t("Orders")}</p>
+                        <p className="mt-1 text-xs font-black text-[#14532D]">342</p>
+                      </div>
+                      <div className="rounded-lg bg-[#F0FAF3] p-2">
+                        <p className="text-[7px] text-slate-400">{t("Leads")}</p>
+                        <p className="mt-1 text-xs font-black text-[#14532D]">128</p>
+                      </div>
+                      <div className="rounded-lg bg-[#F0FAF3] p-2">
+                        <p className="text-[7px] text-slate-400">{t("Growth")}</p>
+                        <p className="mt-1 text-xs font-black text-[#14532D]">+12%</p>
+                      </div>
+                    </div>
+                    <div className="mt-3 rounded-lg border border-slate-100 p-2.5">
+                      <div className="flex items-end gap-1">
+                        {[30, 45, 38, 62, 52, 76, 68].map((height, index) => (
+                          <div key={index} style={{ height: `${height}px` }} className="flex-1 rounded-t bg-[#94D8AB]" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="absolute left-4 top-6 z-20 rounded-2xl border border-[#BDE8CB] bg-white p-3 shadow-sm sm:left-7">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#DCF3E3] text-[#2F855A]">
+                        <Users size={15} />
+                      </div>
+                      <div>
+                        <p className="text-[8px] font-bold text-slate-400">{t("Connected")}</p>
+                        <p className="text-[10px] font-black text-[#14532D]">CRM</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="absolute bottom-6 left-4 z-20 rounded-2xl border border-[#BDE8CB] bg-white p-3 shadow-sm sm:left-7">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#DCF3E3] text-[#2F855A]">
+                        <Globe2 size={15} />
+                      </div>
+                      <div>
+                        <p className="text-[8px] font-bold text-slate-400">{t("Connected")}</p>
+                        <p className="text-[10px] font-black text-[#14532D]">{t("Website")}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="absolute bottom-6 right-4 z-20 rounded-2xl border border-[#BDE8CB] bg-white p-3 shadow-sm sm:right-7">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#DCF3E3] text-[#2F855A]">
+                        <Bot size={15} />
+                      </div>
+                      <div>
+                        <p className="text-[8px] font-bold text-slate-400">{t("Connected")}</p>
+                        <p className="text-[10px] font-black text-[#14532D]">{t("AI Manager")}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="absolute left-1/2 top-1/2 z-30 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#2F855A] text-white shadow-lg">
+                    <Zap size={15} />
+                  </div>
+                </div>
+
+                <div className="mt-6 flex items-start gap-3">
+                  <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#DCF3E3] text-[#2F855A]">
+                    <Check size={12} strokeWidth={3} />
+                  </div>
+                  <p className="text-sm font-semibold leading-6 text-slate-600">
+                    {t("One dashboard. One connected system. One clearer view of your business.")}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mx-auto mt-12 max-w-2xl text-center">
+            <p className="text-lg font-extrabold tracking-tight text-[#14532D] sm:text-xl">
+              {t("Less switching.")}{" "}
+              <span className="text-[#2F855A]">{t("More doing.")}</span>
+            </p>
+            <p className="mt-2 text-sm leading-6 text-slate-500">
+              {t("BeezNest brings the important parts of your business into one place.")}
+            </p>
           </div>
         </div>
       </section>
@@ -363,455 +588,52 @@ export default function Home() {
       {/* =====================================================
           HOW IT WORKS
       ===================================================== */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <SectionHeading
-            eyebrow={t("How it works")}
-            title={t("Get started in four simple steps")}
-          />
-
-          <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                number: "01",
-                title: "Sign up and choose your business type",
-              },
-              {
-                number: "02",
-                title: "Tell us about your business",
-              },
-              {
-                number: "03",
-                title: "Set up your menu or pipeline",
-              },
-              {
-                number: "04",
-                title: "Get your website and ask your AI manager",
-              },
-            ].map((item) => (
-              <div
-                key={item.number}
-                className="rounded-3xl border border-green-100 bg-white p-6 shadow-sm"
-              >
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#94D8AB] font-black text-[#14532D]">
-                  {item.number}
-                </div>
-
-                <h3 className="mt-6 font-bold leading-6 text-[#14532D]">
-                  {t(item.title)}
-                </h3>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HowItWorks />
 
       {/* =====================================================
-          FEATURES
+          STEP 6 — FEATURE SHOWCASE
       ===================================================== */}
-      <section id="features" className="bg-slate-50 py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <SectionHeading
-            eyebrow={t("Feature showcase")}
-            title={t("Tools designed around the way you work")}
-            description={t("Switch between business types to explore the most relevant features.")}
-          />
-
-          <div className="mt-10 flex justify-center">
-            <div className="inline-flex rounded-2xl border border-green-100 bg-white p-1">
-              <button
-                onClick={() => setActiveBusiness("restaurant")}
-                className={`rounded-xl px-5 py-3 text-sm font-bold transition ${
-                  activeBusiness === "restaurant"
-                    ? "bg-[#94D8AB] text-[#14532D]"
-                    : "text-slate-500"
-                }`}
-              >
-                {t("Restaurant")}
-              </button>
-
-              <button
-                onClick={() => setActiveBusiness("visa")}
-                className={`rounded-xl px-5 py-3 text-sm font-bold transition ${
-                  activeBusiness === "visa"
-                    ? "bg-[#94D8AB] text-[#14532D]"
-                    : "text-slate-500"
-                }`}
-              >
-                {t("Visa Agency")}
-              </button>
-            </div>
-          </div>
-
-          <div className="mt-12 grid gap-5 md:grid-cols-2">
-            {(activeBusiness === "restaurant"
-              ? [
-                  { icon: Store, title: "Table layout and orders" },
-                  { icon: Smartphone, title: "Kitchen screen" },
-                  { icon: Users, title: "Customers and loyalty" },
-                  { icon: BarChart3Icon, title: "Reports and profit per item" },
-                ]
-              : [
-                  { icon: Users, title: "Lead pipeline" },
-                  { icon: LayoutDashboard, title: "Document checklist" },
-                  { icon: MessageSquareText, title: "Follow-up reminders" },
-                  { icon: BarChart3Icon, title: "Fees and installments" },
-                ]
-            ).map((feature) => {
-              const Icon = feature.icon;
-
-              return (
-                <div
-                  key={feature.title}
-                  className="rounded-3xl border border-green-100 bg-white p-7"
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F0FAF3]">
-                    <Icon size={23} className="text-[#2F855A]" />
-                  </div>
-
-                  <h3 className="mt-5 text-xl font-bold text-[#14532D]">
-                    {t(feature.title)}
-                  </h3>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <FeatureShowcase
+        activeBusiness={activeBusiness}
+        setActiveBusiness={setActiveBusiness}
+      />
 
       {/* =====================================================
-          AI BUSINESS MANAGER
+          STEP 7 — SPECIAL FEATURES
       ===================================================== */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-2 lg:px-8">
-          <div>
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F0FAF3]">
-              <Bot size={30} className="text-[#2F855A]" />
-            </div>
+      <SpecialFeatures />
 
-            <p className="mt-6 text-sm font-bold uppercase tracking-wider text-[#2F855A]">
-              {t("Your AI Business Manager")}
-            </p>
-
-            <h2 className="mt-3 text-4xl font-black tracking-tight text-[#14532D]">
-              {t("Ask your business questions in plain language.")}
-            </h2>
-
-            <p className="mt-5 text-lg leading-8 text-slate-600">
-              {t("Get practical suggestions based on your business data, customers and daily operations.")}
-            </p>
-
-            <div className="mt-7 space-y-3">
-              {[
-                "Spot customer opportunities",
-                "Understand business performance",
-                "Get weekly business insights",
-              ].map((item) => (
-                <div
-                  key={item}
-                  className="flex items-center gap-3 text-slate-600"
-                >
-                  <Check size={18} className="text-[#2F855A]" />
-                  {t(item)}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-3xl border border-green-100 bg-[#F0FAF3] p-5">
-            <div className="rounded-2xl bg-white p-6 shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#94D8AB]">
-                  <Bot size={20} />
-                </div>
-
-                <div>
-                  <p className="font-bold text-[#14532D]">{t("BeezNest AI")}</p>
-                  <p className="text-xs text-slate-400">{t("Business Manager")}</p>
-                </div>
-              </div>
-
-              <div className="mt-6 rounded-2xl bg-slate-50 p-4">
-                <p className="text-sm font-semibold text-slate-700">{t("You")}</p>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  {t("How can I get more repeat customers?")}
-                </p>
-              </div>
-
-              <div className="mt-4 rounded-2xl bg-[#F0FAF3] p-4">
-                <p className="text-sm font-semibold text-[#2F855A]">
-                  {t("BeezNest AI")}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  {t("Start a win-back message for customers who have not returned recently, then review the response after a week.")}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* =====================================================
+          STEP 8 — AI MANAGER SPOTLIGHT
+      ===================================================== */}
+      <AIManagerSpotlight />
 
       {/* =====================================================
           WEBSITE BUILDER
       ===================================================== */}
-      <section className="bg-[#F0FAF3] py-20 lg:py-28">
-        <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-2 lg:px-8">
-          <div className="order-2 lg:order-1">
-            <div className="rounded-3xl border border-green-100 bg-white p-5 shadow-xl">
-              <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
-                <div className="h-5 w-32 rounded bg-[#94D8AB]" />
-
-                <div className="mt-6 grid grid-cols-3 gap-3">
-                  <div className="col-span-2 h-32 rounded-xl bg-[#DCF3E3]" />
-                  <div className="h-32 rounded-xl bg-white" />
-                </div>
-
-                <div className="mt-4 grid grid-cols-3 gap-3">
-                  <div className="h-20 rounded-xl bg-white" />
-                  <div className="h-20 rounded-xl bg-white" />
-                  <div className="h-20 rounded-xl bg-white" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="order-1 lg:order-2">
-            <p className="text-sm font-bold uppercase tracking-wider text-[#2F855A]">
-              {t("Website Builder")}
-            </p>
-
-            <h2 className="mt-3 text-4xl font-black text-[#14532D]">
-              {t("A website that stays in sync with your CRM.")}
-            </h2>
-
-            <p className="mt-5 text-lg leading-8 text-slate-600">
-              {t("Build a professional business website without managing another disconnected system.")}
-            </p>
-
-            <div className="mt-7 space-y-4">
-              {[
-                "Pick your colours and logo",
-                "We build it for you",
-                "Change a price in CRM and your website updates",
-              ].map((item) => (
-                <div key={item} className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#94D8AB]">
-                    <Check size={16} />
-                  </div>
-
-                  <span className="text-slate-600">{t(item)}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================
-          SPECIAL FEATURES
-      ===================================================== */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <SectionHeading
-            eyebrow={t("Special features")}
-            title={t("Small details that make a big difference")}
-          />
-
-          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              { icon: MessageSquareText, title: "Smart win-back SMS" },
-              { icon: QrCode, title: "QR table ordering" },
-              { icon: BarChart3Icon, title: "Profit per item" },
-              { icon: Bot, title: "Weekly AI report" },
-              { icon: Smartphone, title: "bKash and Nagad ready" },
-              { icon: Globe2, title: "Bangla and English" },
-            ].map((item) => {
-              const Icon = item.icon;
-
-              return (
-                <div
-                  key={item.title}
-                  className="rounded-3xl border border-green-100 bg-white p-7 shadow-sm"
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F0FAF3]">
-                    <Icon size={22} className="text-[#2F855A]" />
-                  </div>
-
-                  <h3 className="mt-5 font-bold text-[#14532D]">
-                    {t(item.title)}
-                  </h3>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <WebsiteBuilderShowcase />
 
       {/* =====================================================
           PRICING PREVIEW
       ===================================================== */}
-      <section className="bg-[#14532D] py-20 text-white lg:py-28">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <SectionHeading
-            eyebrow={t("Simple pricing")}
-            title={t("Plans that grow with your business")}
-            description={t("Start small and move up when your business needs more.")}
-            variant="dark"
-          />
-
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {[
-              { name: "Starter", price: "৳1,200" },
-              { name: "Growth", price: "৳3,000" },
-              { name: "Pro", price: "৳5,500" },
-            ].map((plan) => (
-              <div
-                key={plan.name}
-                className="rounded-3xl border border-green-800 bg-white/5 p-7"
-              >
-                <p className="font-bold">{t(plan.name)}</p>
-
-                <p className="mt-4 text-4xl font-black">
-                  {plan.price}
-                  <span className="text-sm font-normal text-green-200">
-                    {t("/month")}
-                  </span>
-                </p>
-
-                <Link
-                  to="/pricing"
-                  className="mt-7 inline-flex w-full justify-center rounded-xl bg-[#94D8AB] px-5 py-3 font-bold text-[#14532D]"
-                >
-                  {t("View pricing")}
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <PricingPreview />
 
       {/* =====================================================
-          TESTIMONIAL / PILOT
+          STEP 9 — TESTIMONIALS
       ===================================================== */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-4xl px-5 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F0FAF3]">
-            <Sparkles size={28} className="text-[#2F855A]" />
-          </div>
-
-          <h2 className="mt-6 text-3xl font-black text-[#14532D] sm:text-4xl">
-            {t("Built with real business needs in mind.")}
-          </h2>
-
-          <p className="mt-5 text-lg leading-8 text-slate-600">
-            {t("We are opening our pilot to restaurant and visa agency owners in Bangladesh.")}
-          </p>
-
-          <Link
-            to="/signup"
-            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#94D8AB] px-6 py-3.5 font-bold text-[#14532D]"
-          >
-            {t("Join the pilot")}
-            <ArrowRight size={18} />
-          </Link>
-        </div>
-      </section>
+      <Testimonials />
 
       {/* =====================================================
           FAQ
       ===================================================== */}
-      <section id="faq" className="bg-slate-50 py-20 lg:py-28">
-        <div className="mx-auto max-w-4xl px-5 lg:px-8">
-          <SectionHeading eyebrow={t("FAQ")} title={t("Questions, answered")} />
-
-          <div className="mt-12 space-y-3">
-            {faqs.map((faq, index) => {
-              const open = openFaq === index;
-
-              return (
-                <div
-                  key={faq.question}
-                  className="rounded-2xl border border-green-100 bg-white"
-                >
-                  <button
-                    onClick={() => setOpenFaq(open ? null : index)}
-                    className="flex w-full items-center justify-between gap-5 px-5 py-5 text-left"
-                  >
-                    <span className="font-bold text-[#14532D]">
-                      {t(faq.question)}
-                    </span>
-
-                    <ChevronDown
-                      size={20}
-                      className={`shrink-0 transition ${
-                        open ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-
-                  {open && (
-                    <div className="border-t border-green-100 px-5 py-5 text-sm leading-7 text-slate-600">
-                      {t(faq.answer)}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <FAQ />
 
       {/* =====================================================
-          FINAL CTA
+          STEP 10 — FINAL CTA
       ===================================================== */}
-      <section className="px-5 py-20 lg:px-8 lg:py-28">
-        <div className="mx-auto max-w-6xl rounded-[2rem] bg-[#F0FAF3] px-6 py-14 text-center sm:px-12">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#94D8AB]">
-            <Zap size={28} className="text-[#14532D]" />
-          </div>
-
-          <h2 className="mt-6 text-4xl font-black text-[#14532D] sm:text-5xl">
-            {t("Ready to run your business smarter?")}
-          </h2>
-
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
-            {t("Start with BeezNest and bring your business tools together in one simple platform.")}
-          </p>
-
-          <Link
-            to="/signup"
-            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#94D8AB] px-7 py-4 font-bold text-[#14532D] shadow-sm hover:bg-[#6BC48C]"
-          >
-            {t("Start free trial")}
-            <ArrowRight size={18} />
-          </Link>
-        </div>
-      </section>
+      <FinalCTA />
 
       <Footer />
     </div>
-  );
-}
-
-/*
-  Small reusable icon component so the feature data above
-  stays simple.
-*/
-function BarChart3Icon(props) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M3 3v18h18" />
-      <path d="M7 16v-4" />
-      <path d="M12 16V8" />
-      <path d="M17 16V5" />
-    </svg>
   );
 }
