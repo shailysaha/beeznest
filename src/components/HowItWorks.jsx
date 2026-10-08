@@ -10,6 +10,7 @@ import {
   Store,
   Users,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 
 function HexagonBadge({ number }) {
@@ -68,9 +69,16 @@ function SignupVisual() {
         </div>
       </div>
 
-      <div className="mt-3 h-8 rounded-xl bg-[#2F855A] text-center text-[9px] font-bold leading-8 text-white">
+      {/* 
+        Kept exactly your original theme. 
+        Only changed div to Link and added "block" so it keeps the full width.
+      */}
+      <Link
+        to="/signup"
+        className="mt-3 block h-8 rounded-xl bg-[#2F855A] text-center text-[9px] font-bold leading-8 text-white"
+      >
         {t("Continue")}
-      </div>
+      </Link>
     </div>
   );
 }

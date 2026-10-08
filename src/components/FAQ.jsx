@@ -176,14 +176,16 @@ export default function FAQ() {
                     "Chat with us and find the right way to get started with your business."
                   )}
                 </p>
-
                <a
   href="mailto:hello@beeznest.com"
-  className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#14532D] px-5 py-3 text-sm font-bold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#2F855A] hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-[#BDE8CB]"
+  style={{ color: "white" }} // <-- This forces the color to be white no matter what
+  className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#2F855A] px-5 py-3 text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#276F4B] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#2F855A] focus:ring-offset-2"
 >
-  {t("Chat with us")}
-  <ArrowRight size={16} />
+  <span style={{ color: "white" }}>{t("Chat with us")}</span>
+  <ArrowRight size={16} style={{ color: "white" }} />
 </a>
+
+             
                 <div className="mt-5 flex items-center gap-2 text-xs font-medium text-[#2F855A]">
                   <CheckCircle2 size={15} />
                   {t("Simple answers. No complicated jargon.")}

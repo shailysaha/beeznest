@@ -17,63 +17,123 @@ import { useLanguage } from "../context/LanguageContext";
 
 const BUSINESS_STORAGE_KEY = "biznest_business_type";
 
+/* =========================================================
+   ILLUSTRATIVE LABEL
+   Keeps demo dashboard content honest and clearly separated
+   from real customer/business data.
+========================================================= */
+function DemoLabel({ children }) {
+  return (
+    <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-brand-100 bg-brand-50 px-2.5 py-1 text-[8px] font-extrabold uppercase tracking-[0.08em] text-brand-700">
+      <span className="h-1.5 w-1.5 rounded-full bg-brand-400" />
+      {children}
+    </div>
+  );
+}
+
+/* =========================================================
+   MINI RESTAURANT DASHBOARD
+   Illustrative UI only — no real business results.
+========================================================= */
 function MiniRestaurantDashboard() {
   const { t } = useLanguage();
+
   return (
     <div className="relative overflow-hidden rounded-2xl border border-brand-100 bg-white shadow-soft">
-      {/* browser bar */}
+      {/* Browser bar */}
       <div className="flex h-7 items-center gap-1.5 border-b border-slate-100 bg-slate-50 px-3">
         <span className="h-2 w-2 rounded-full bg-slate-300" />
         <span className="h-2 w-2 rounded-full bg-slate-300" />
         <span className="h-2 w-2 rounded-full bg-slate-300" />
+
         <div className="mx-auto h-3.5 w-28 rounded-full bg-white ring-1 ring-slate-100" />
       </div>
 
       <div className="p-3 sm:p-4">
-        {/* heading */}
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[9px] font-semibold text-slate-400">BeezNest</p>
-            <p className="text-sm font-extrabold text-brand-900">
+        {/* Demo notice */}
+        <DemoLabel>{t("Demo")}</DemoLabel>
+
+        <p className="mb-3 text-[8px] leading-4 text-slate-400">
+          {t(
+            "Illustrative dashboard preview — sample content, not real customer data."
+          )}
+        </p>
+
+        {/* Heading */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-[9px] font-semibold text-slate-400">
+              BeezNest
+            </p>
+
+            <p className="truncate text-sm font-extrabold text-brand-900">
               {t("Restaurant overview")}
             </p>
           </div>
-          <div className="flex items-center gap-1 rounded-full bg-brand-50 px-2 py-1 text-[8px] font-bold text-brand-700">
+
+          <div className="flex shrink-0 items-center gap-1 rounded-full bg-brand-50 px-2 py-1 text-[8px] font-bold text-brand-700">
             <span className="h-1.5 w-1.5 rounded-full bg-brand-400" />
-            {t("Live")}
+            {t("Example")}
           </div>
         </div>
 
-        {/* stats */}
+        {/* Sample stats */}
         <div className="mt-3 grid grid-cols-3 gap-2">
           <div className="rounded-xl bg-brand-50 p-2.5">
             <ShoppingBag size={13} className="text-brand-700" />
-            <p className="mt-2 text-[8px] text-slate-400">{t("Orders")}</p>
-            <p className="text-sm font-black text-brand-900">342</p>
+
+            <p className="mt-2 text-[8px] text-slate-400">
+              {t("Orders")}
+            </p>
+
+            <p className="text-xs font-black text-brand-900">
+              {t("Sample")}
+            </p>
           </div>
+
           <div className="rounded-xl bg-brand-50 p-2.5">
             <Users size={13} className="text-brand-700" />
-            <p className="mt-2 text-[8px] text-slate-400">{t("Customers")}</p>
-            <p className="text-sm font-black text-brand-900">128</p>
+
+            <p className="mt-2 text-[8px] text-slate-400">
+              {t("Customers")}
+            </p>
+
+            <p className="text-xs font-black text-brand-900">
+              {t("Sample")}
+            </p>
           </div>
+
           <div className="rounded-xl bg-brand-50 p-2.5">
             <BarChart3 size={13} className="text-brand-700" />
-            <p className="mt-2 text-[8px] text-slate-400">{t("Revenue")}</p>
-            <p className="text-sm font-black text-brand-900">৳84K</p>
+
+            <p className="mt-2 text-[8px] text-slate-400">
+              {t("Revenue")}
+            </p>
+
+            <p className="text-xs font-black text-brand-900">
+              {t("Sample")}
+            </p>
           </div>
         </div>
 
-        {/* chart */}
+        {/* Example chart */}
         <div className="mt-3 rounded-xl border border-slate-100 bg-white p-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <div>
               <p className="text-[9px] font-bold text-brand-900">
                 {t("Sales overview")}
               </p>
-              <p className="text-[8px] text-slate-400">{t("Last 7 days")}</p>
+
+              <p className="text-[8px] text-slate-400">
+                {t("Example view")}
+              </p>
             </div>
-            <span className="text-[9px] font-bold text-brand-700">+12.4%</span>
+
+            <span className="shrink-0 rounded-full bg-slate-50 px-2 py-1 text-[8px] font-bold text-slate-400">
+              {t("Sample data")}
+            </span>
           </div>
+
           <div className="mt-3 flex h-16 items-end gap-1.5">
             {[38, 55, 46, 72, 61, 84, 74].map((height, index) => (
               <div
@@ -89,81 +149,136 @@ function MiniRestaurantDashboard() {
   );
 }
 
+/* =========================================================
+   MINI AGENCY DASHBOARD
+   Illustrative UI only — no real applicants/results.
+========================================================= */
 function MiniAgencyDashboard() {
   const { t } = useLanguage();
+
+  const applicants = [
+    {
+      initials: "EX",
+      name: t("Example applicant"),
+      type: t("Student Visa"),
+    },
+    {
+      initials: "EX",
+      name: t("Example applicant"),
+      type: t("UK Application"),
+    },
+    {
+      initials: "EX",
+      name: t("Example applicant"),
+      type: t("Canada Study"),
+    },
+  ];
+
   return (
     <div className="relative overflow-hidden rounded-2xl border border-brand-100 bg-white shadow-soft">
-      {/* browser bar */}
+      {/* Browser bar */}
       <div className="flex h-7 items-center gap-1.5 border-b border-slate-100 bg-slate-50 px-3">
         <span className="h-2 w-2 rounded-full bg-slate-300" />
         <span className="h-2 w-2 rounded-full bg-slate-300" />
         <span className="h-2 w-2 rounded-full bg-slate-300" />
+
         <div className="mx-auto h-3.5 w-28 rounded-full bg-white ring-1 ring-slate-100" />
       </div>
 
       <div className="p-3 sm:p-4">
-        {/* heading */}
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[9px] font-semibold text-slate-400">BeezNest</p>
-            <p className="text-sm font-extrabold text-brand-900">
+        {/* Demo notice */}
+        <DemoLabel>{t("Demo")}</DemoLabel>
+
+        <p className="mb-3 text-[8px] leading-4 text-slate-400">
+          {t(
+            "Illustrative dashboard preview — sample content, not real customer data."
+          )}
+        </p>
+
+        {/* Heading */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-[9px] font-semibold text-slate-400">
+              BeezNest
+            </p>
+
+            <p className="truncate text-sm font-extrabold text-brand-900">
               {t("Visa pipeline")}
             </p>
           </div>
-          <div className="flex items-center gap-1 rounded-full bg-brand-50 px-2 py-1 text-[8px] font-bold text-brand-700">
+
+          <div className="flex shrink-0 items-center gap-1 rounded-full bg-brand-50 px-2 py-1 text-[8px] font-bold text-brand-700">
             <Globe2 size={10} />
             {t("Agency")}
           </div>
         </div>
 
-        {/* pipeline */}
+        {/* Example pipeline */}
         <div className="mt-3 grid grid-cols-3 gap-2">
           <div className="rounded-xl bg-slate-50 p-2">
-            <p className="text-[8px] font-bold text-slate-500">{t("New")}</p>
-            <p className="mt-1 text-base font-black text-brand-900">24</p>
+            <p className="text-[8px] font-bold text-slate-500">
+              {t("New")}
+            </p>
+
+            <p className="mt-1 text-xs font-black text-brand-900">
+              {t("Sample")}
+            </p>
           </div>
+
           <div className="rounded-xl bg-brand-50 p-2">
             <p className="text-[8px] font-bold text-brand-700">
               {t("Processing")}
             </p>
-            <p className="mt-1 text-base font-black text-brand-900">18</p>
+
+            <p className="mt-1 text-xs font-black text-brand-900">
+              {t("Sample")}
+            </p>
           </div>
+
           <div className="rounded-xl bg-brand-100 p-2">
             <p className="text-[8px] font-bold text-brand-700">
               {t("Approved")}
             </p>
-            <p className="mt-1 text-base font-black text-brand-900">12</p>
+
+            <p className="mt-1 text-xs font-black text-brand-900">
+              {t("Sample")}
+            </p>
           </div>
         </div>
 
-        {/* applicants */}
+        {/* Example applicants */}
         <div className="mt-3 rounded-xl border border-slate-100 bg-white p-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <p className="text-[9px] font-bold text-brand-900">
               {t("Recent applicants")}
             </p>
-            <span className="text-[8px] font-semibold text-brand-700">
-              {t("View all")}
+
+            <span className="shrink-0 text-[8px] font-semibold text-slate-400">
+              {t("Example")}
             </span>
           </div>
 
           <div className="mt-3 space-y-2">
-            {[
-              ["RA", "Rahim Ahmed", t("Student Visa")],
-              ["NS", "Nusrat S.", t("UK Application")],
-              ["TA", "Tanvir A.", t("Canada Study")],
-            ].map(([initials, name, type]) => (
-              <div key={name} className="flex items-center gap-2">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-100 text-[8px] font-black text-brand-700">
+            {applicants.map(({ initials, name, type }, index) => (
+              <div
+                key={`${name}-${index}`}
+                className="flex items-center gap-2"
+              >
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-100 text-[8px] font-black text-brand-700">
                   {initials}
                 </div>
+
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-[8px] font-bold text-slate-700">
                     {name}
                   </p>
-                  <p className="truncate text-[7px] text-slate-400">{type}</p>
+
+                  <p className="truncate text-[7px] text-slate-400">
+                    {type}
+                  </p>
                 </div>
-                <span className="h-1.5 w-1.5 rounded-full bg-brand-400" />
+
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-300" />
               </div>
             ))}
           </div>
@@ -173,6 +288,9 @@ function MiniAgencyDashboard() {
   );
 }
 
+/* =========================================================
+   BUSINESS CARD
+========================================================= */
 function BusinessCard({
   type,
   title,
@@ -195,41 +313,44 @@ function BusinessCard({
       }`}
     >
       <div className="relative h-full overflow-hidden rounded-[1.7rem] bg-white p-5 sm:p-6 lg:p-7">
-        {/* decorative glow */}
+        {/* Decorative glow */}
         <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-brand-100/70 blur-3xl transition duration-500 group-hover:bg-brand-200" />
 
-        {/* selected check */}
+        {/* Selected check */}
         {selected && (
           <div className="absolute right-5 top-5 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-brand-700 text-white shadow-md">
             <Check size={16} strokeWidth={3} />
           </div>
         )}
 
-        {/* heading */}
+        {/* Heading */}
         <div className="relative z-10 flex items-start gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-100 text-brand-700 transition duration-300 group-hover:scale-105 group-hover:bg-brand-200">
             <Icon size={23} />
           </div>
-          <div className="pr-8">
+
+          <div className="min-w-0 pr-8">
             <p className="text-xl font-extrabold tracking-tight text-brand-900">
               {title}
             </p>
+
             <p className="mt-1 text-sm leading-6 text-slate-500">
               {description}
             </p>
           </div>
         </div>
 
-        {/* mini dashboard */}
+        {/* Mini dashboard */}
         <div className="relative z-10 mt-6">{children}</div>
 
-        {/* benefits */}
+        {/* Benefits */}
         <div className="relative z-10 mt-6 space-y-3">
           {benefits.map((benefit) => (
             <div key={benefit} className="flex items-start gap-2.5">
               <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-700">
                 <Check size={11} strokeWidth={3} />
               </div>
+
               <span className="text-sm font-semibold text-slate-600">
                 {benefit}
               </span>
@@ -237,28 +358,29 @@ function BusinessCard({
           ))}
         </div>
 
-        {/* button */}
+        {/* Button */}
         <div className="relative z-10 mt-7">
           <Link
-            to="/signup"
-            onClick={(event) => {
-              event.stopPropagation();
-              onSelect();
-            }}
-            className="inline-flex items-center gap-2 rounded-full bg-brand-900 px-5 py-3 text-sm font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg"
-          >
-            {ctaLabel}
-            <ArrowRight
-              size={15}
-              className="transition-transform duration-200 group-hover:translate-x-1"
-            />
-          </Link>
+  to="/signup"
+  onClick={(event) => {
+    event.stopPropagation();
+    onSelect();
+  }}
+  className="inline-flex items-center gap-2 rounded-full bg-[#1B7F4B] px-5 py-3 text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#146337] hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-[#1B7F4B]/20"
+>
+  <span className="text-white">{ctaLabel}</span>
+  <ArrowRight size={15} className="text-white transition-transform duration-300 group-hover:translate-x-1" />
+</Link>
+    
         </div>
       </div>
     </article>
   );
 }
 
+/* =========================================================
+   MAIN COMPONENT
+========================================================= */
 export default function TrustAndBusiness() {
   const { t } = useLanguage();
 
@@ -268,18 +390,30 @@ export default function TrustAndBusiness() {
 
   const chooseBusiness = (type) => {
     setSelectedBusiness(type);
+
     localStorage.setItem(BUSINESS_STORAGE_KEY, type);
+
     window.dispatchEvent(
-      new CustomEvent("biznest-business-change", { detail: type })
+      new CustomEvent("biznest-business-change", {
+        detail: type,
+      })
     );
   };
 
   const scrollToFeatures = () => {
     const featureSection = document.getElementById("feature-showcase");
+
     if (!featureSection) return;
+
     const y =
-      featureSection.getBoundingClientRect().top + window.pageYOffset - 90;
-    window.scrollTo({ top: y, behavior: "smooth" });
+      featureSection.getBoundingClientRect().top +
+      window.pageYOffset -
+      90;
+
+    window.scrollTo({
+      top: y,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -288,23 +422,24 @@ export default function TrustAndBusiness() {
           3.1 TRUST STRIP
       ================================================= */}
       <section
-        aria-label="Payment and Bangladesh trust"
+        aria-label={t("Payment and Bangladesh trust")}
         className="border-y border-brand-100 bg-white"
       >
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-          {/* message */}
+          {/* Message */}
           <div className="flex items-center justify-center gap-2.5 lg:justify-start">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-brand-700">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-700">
               <Check size={15} strokeWidth={3} />
             </div>
+
             <p className="text-sm font-bold text-brand-900">
               {t("Secure payments and made for Bangladesh")}
             </p>
           </div>
 
-          {/* payment marks */}
+          {/* Payment marks */}
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            {["bKash", "Nagad", "SSLCommerz"].map((brand) => (
+            {["bKash", "Nagad"].map((brand) => (
               <span
                 key={brand}
                 className="rounded-full border border-brand-100 bg-brand-50 px-4 py-2 text-xs font-extrabold text-slate-600 transition hover:bg-brand-100 hover:text-brand-900"
@@ -323,19 +458,21 @@ export default function TrustAndBusiness() {
         id="business-types"
         className="relative overflow-hidden bg-brand-50 py-20 sm:py-24 lg:py-28"
       >
-        {/* background glow */}
+        {/* Background glow */}
         <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-200/50 blur-[100px]" />
 
         <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
-          {/* heading */}
+          {/* Heading */}
           <div className="mx-auto max-w-2xl text-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/70 px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.12em] text-brand-700 backdrop-blur">
               <Sparkles size={13} />
+
               {t("Choose your business")}
             </div>
 
             <h2 className="mt-5 text-3xl font-extrabold tracking-tight text-brand-900 sm:text-4xl lg:text-[44px] lg:leading-tight">
               {t("Built around the way")}
+
               <span className="block bg-gradient-to-r from-brand-700 to-brand-400 bg-clip-text text-transparent">
                 {t("your business works.")}
               </span>
@@ -348,7 +485,7 @@ export default function TrustAndBusiness() {
             </p>
           </div>
 
-          {/* cards */}
+          {/* Cards */}
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
             {/* RESTAURANT */}
             <BusinessCard
@@ -409,15 +546,17 @@ export default function TrustAndBusiness() {
                   )}
                 </p>
 
-                {/* future preview */}
+                {/* Future preview */}
                 <div className="mt-6 flex flex-1 items-center justify-center rounded-2xl border border-brand-100 bg-gradient-to-br from-white to-brand-50">
                   <div className="text-center">
                     <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-100 text-brand-700">
                       <LayoutDashboard size={26} />
                     </div>
+
                     <p className="mt-3 text-xs font-bold text-slate-400">
                       {t("New business tools")}
                     </p>
+
                     <div className="mt-3 flex justify-center gap-1.5">
                       <span className="h-1.5 w-8 rounded-full bg-brand-200" />
                       <span className="h-1.5 w-5 rounded-full bg-brand-100" />
@@ -428,23 +567,26 @@ export default function TrustAndBusiness() {
 
                 <div className="mt-6 flex items-center gap-2 text-xs font-bold text-slate-400">
                   <Clock3 size={14} />
+
                   {t("More coming soon")}
                 </div>
               </div>
             </article>
           </div>
 
-          {/* bottom helper */}
+          {/* Bottom helper */}
           <div className="mt-8 flex flex-col items-center justify-center gap-3 text-center sm:flex-row">
             <p className="text-sm text-slate-500">
               {t("Already know what you need?")}
             </p>
+
             <button
               type="button"
               onClick={scrollToFeatures}
-              className="inline-flex items-center gap-1.5 text-sm font-extrabold text-brand-700 transition hover:text-brand-900"
+              className="inline-flex items-center gap-1.5 rounded-md text-sm font-extrabold text-brand-700 transition hover:text-brand-900 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2"
             >
               {t("Explore the features")}
+
               <ArrowRight size={14} />
             </button>
           </div>
